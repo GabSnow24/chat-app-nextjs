@@ -1,11 +1,12 @@
+import { NextPage } from 'next'
 import Head from 'next/head'
 
-export default function Home() {
+const Home: NextPage = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>A & G</title>
+        <link rel="icon" href="/heart.ico.png" />
       </Head>
 
       <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
@@ -80,3 +81,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default Home;
