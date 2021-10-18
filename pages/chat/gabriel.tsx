@@ -6,7 +6,7 @@ export default function ChatGabriel(){
 
     return(
         <div>
-            <Chat imagem="../gabriel.png" texto="Gabriel Queiroz"></Chat>
+            <Chat imagem="../gabriel.png" texto="Gabriel Queiroz" id="gabriel"></Chat>
         </div>
     )
 }
