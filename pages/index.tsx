@@ -23,10 +23,10 @@ const Home: NextPage = () => {
         </p>
         <div className="flex flex-wrap items-center justify-around max-w-4xl mt-6 sm:w-full">
           <div className="flex gap-x-2">
-            <Button variant="contained" size="large" color="error" href="/chat/gabriel">
+            <Button variant="contained" size="large" color="error" href="/chat/adryelle">
               Adryelle
             </Button>
-            <Button variant="contained"  size="large" href="/chat/adryelle">
+            <Button variant="contained"  size="large" href="/chat/gabriel">
               Gabriel
             </Button>
           </div>
