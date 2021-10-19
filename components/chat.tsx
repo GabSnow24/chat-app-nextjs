@@ -1,17 +1,12 @@
-import { TextField } from "@material-ui/core"
+import axios from 'axios'
 import { NextPage } from "next"
-import { useEffect, useState } from "react"
+import { useEffect, useState, } from "react"
 import { enviar } from "./svg"
 import io from 'socket.io-client'
 
-const socket = io('http://localhost:3003', {
-    withCredentials: true,
-    extraHeaders: {
-      "my-custom-header": "abcd"
-    }
-  }) 
-socket.on('connect', ()=> console.log('[IO] Usuário conectado 💓'))
-
+const socket = io('http://localhost:3003') 
+socket.on('connection', ()=> console.log('[IO] Usuário conectado 💓'))
+ 
 interface ChatProps {
     imagem: any
     texto: any
@@ -21,13 +16,24 @@ interface ChatProps {
 
 
 const Chat: NextPage<ChatProps, any> = (props) => {
-
+    
+    useEffect( 
+        ()=>{
+            async function api() {
+                const response = await axios.get('http://localhost:3000/api/socket')
+                
+            }
+            api()
+        }
+    )
 
     const [size, setSize] = useState(1)
     const [row, setRow] = useState(1)
     const [msg, setMsg] = useState("")
-    const [msgs, setMsgs] = useState([])
-
+    const [msgs, setMsgs] = useState([{mensagem:"blablabla",hora:"12:45", id:"gabriel"},
+                                        {mensagem:"blablabla",hora:"12:45", id:"gabriel"},
+                                        {mensagem:"blablabla",hora:"12:45", id:"adryelle"}])
+    
     // const showArea = () => {
     //     const textarea = document.querySelector("textarea")
     //     textarea.addEventListener("keydown", async (e) => {
@@ -61,6 +67,13 @@ const Chat: NextPage<ChatProps, any> = (props) => {
                 id:props.id
             }])
             setMsg("")
+            console.log('flamengo')
+
+            const data_to_send = {
+                data: msgs[msgs.length-1]
+            }
+
+            socket.emit('teste',  data_to_send)
         }
     }
 
