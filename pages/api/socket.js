@@ -1,15 +1,17 @@
-// import cors from 'cors'
+
 const cors = require('cors')
+
 const api = async () =>{
+
 const app = require('express')()
+
 app.use(cors({origin:"*"}))
+
 const http = require('http').Server(app)
 const io = require('socket.io')(http, {
     cors: {
         origin: "*",
         methods: ["GET", "POST"],
-        // allowedHeaders: ["my-custom-header"],
-        // credentials: true
       }
     
 })
@@ -17,11 +19,13 @@ const io = require('socket.io')(http, {
 io.on('connection', (socket) =>{
     console.log(`[IO] - rodando 💓 ${socket.id}`)
     
-    socket.on('teste', (data)=>{
+    socket.on('msggo', (data)=>{
 
         console.log(data)
 
         console.log('teste funcionou')
+
+        socket.emit('msgcome',(data))
     })
 })
 
