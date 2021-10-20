@@ -5,7 +5,7 @@ import { enviar } from "./svg"
 import io from 'socket.io-client'
 
 const socket = io('http://localhost:3003') 
-socket.on('connection', ()=> console.log('[IO] Usuário conectado 💓'))
+socket.on('connect', ()=> console.log(`[IO] Usuário conectado 💓`))
  
 interface ChatProps {
     imagem: any
@@ -23,16 +23,17 @@ const Chat: NextPage<ChatProps, any> = (props) => {
                 const response = await axios.get('http://localhost:3000/api/socket')
                 
             }
+
+            
             api()
+            
         }
     )
 
     const [size, setSize] = useState(1)
     const [row, setRow] = useState(1)
     const [msg, setMsg] = useState("")
-    const [msgs, setMsgs] = useState([{mensagem:"blablabla",hora:"12:45", id:"gabriel"},
-                                        {mensagem:"blablabla",hora:"12:45", id:"gabriel"},
-                                        {mensagem:"blablabla",hora:"12:45", id:"adryelle"}])
+    const [msgs, setMsgs] = useState([])
     
     // const showArea = () => {
     //     const textarea = document.querySelector("textarea")
@@ -53,27 +54,40 @@ const Chat: NextPage<ChatProps, any> = (props) => {
     //         }
     //     })
     // }
+
+    socket.on('msgcome', (data)=>{
+        console.log(data)
+        setMsgs([...msgs, {
+            mensagem:data.mensagem,
+            hora:data.hora,
+            id:data.id
+        }])
+
+        socket.off('msgcome')
+
+    })
+
     const handleChange = async (event:any) =>{
        await setMsg(event.target.value)
        console.log(msg)
     }
 
     const handleSubmit = async (event:any) =>{
+        const hora = new Date()
         event.preventDefault()
         if(msg.trim()){
-            setMsgs([...msgs, {
-                mensagem:msg,
-                hora:"12:45",
-                id:props.id
-            }])
-            setMsg("")
-            console.log('flamengo')
-
             const data_to_send = {
-                data: msgs[msgs.length-1]
+                mensagem: msg,
+                hora: hora.getTime(),
+                id: props.id,
             }
+            
+            socket.emit('msggo',  data_to_send)
 
-            socket.emit('teste',  data_to_send)
+            setMsg("")
+            
+
+            
         }
     }
 
@@ -88,14 +102,14 @@ const Chat: NextPage<ChatProps, any> = (props) => {
                     (mensagem: any, index:any) => {
                         if (mensagem.id == props.id)
                             return (
-                                <div className="text-center mr-2 border-none bg-blue-500 ml-52 shadow-2xl shadow-inner rounded-lg pt-2  h-auto w-36 text-white m-2" key={index}>
+                                <div className="text-center mr-2 border-none bg-blue-500 ml-52 shadow-2xl shadow-inner rounded-lg pt-2  h-auto w-auto text-white m-2" key={index}>
                                     <p >{mensagem.mensagem}</p> 
                                     <p className="text-right mr-2 text-xs">{mensagem.hora}</p>
                                 </div>
                             )
                         if (mensagem.id != props.id)
                             return (
-                                <div className="text-center mr-2 rounded-lg pt-2   shadow-2xl shadow-inner h-auto w-36 border-none bg-blue-700 text-white m-2" key={index}>
+                                <div className="text-center mr-2 rounded-lg pt-2   shadow-2xl shadow-inner h-auto w-auto border-none bg-blue-700 text-white m-2" key={index}>
                                     <p>{mensagem.mensagem}</p>
                                     <p className="text-right mr-2 text-xs">{mensagem.hora}</p>
                                 </div>
